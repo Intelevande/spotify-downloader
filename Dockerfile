@@ -12,7 +12,8 @@ RUN apk add --no-cache \
     git \
     py3-cffi \
     libffi-dev \
-    zlib-dev
+    zlib-dev \
+    nodejs
 
 # Install uv and update pip/wheel
 RUN pip install --upgrade pip uv wheel spotipy
@@ -25,6 +26,10 @@ COPY . .
 
 # Install spotdl requirements
 RUN uv sync
+
+# Configure yt-dlp to use Node.js
+RUN mkdir -p /root/.config/yt-dlp && \
+    echo "--js-runtimes node" > /root/.config/yt-dlp/config
 
 # Create a volume for the output directory
 VOLUME /music
